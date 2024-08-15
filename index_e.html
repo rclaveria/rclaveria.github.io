@@ -1,0 +1,1194 @@
+<html>
+<head> 
+
+<meta charset  =  "UTF-8">
+
+<title>Audio declipping with conditionally Gaussian time-frequency models</title>
+
+<meta http-equiv  =  "X-UA-Compatible" content  =  "IE  =  Edge">
+<meta name  =  "description" content  =  "Support material of Chapter 6: Audio declipping with conditionally Gaussian time-frequency models.">
+<meta name  =  "author" content  =  "Rubén M. Clavería-Vega">
+<meta name  =  "viewport" content  =  "width  =  device-width, initial-scale  =  1, maximum-scale  =  1">
+
+<link rel  =  "stylesheet" href  =  "css/bootstrap.min.css">
+<link rel  =  "stylesheet" href  =  "css/animate.css">
+<link rel  =  "stylesheet" href  =  "css/magnific-popup.css">
+<link rel  =  "stylesheet" href  =  "css/font-awesome.min.css">
+<link rel  =  "stylesheet" href  =  "css/tooplate-style.css">
+
+<style>
+table, th, td {
+  border: 1px solid black;
+}
+
+table.center {
+  margin-left: auto; 
+  margin-right: auto;
+}	
+
+.button {
+  font: bold 11px Arial;
+  text-decoration: none;
+  background-color: #EEEEEE;
+  color: #333333;
+  padding: 2px 6px 2px 6px;
+  border-top: 1px solid #CCCCCC;
+  border-right: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  border-left: 1px solid #CCCCCC;
+}
+
+#content{
+  width: 95%;/*change the value to suite ur need*/
+  margin:0 auto;/*this will center ur content*/
+  margin-bottom: 50px;
+}
+
+#declipping-index{
+	margin-top: 50px;
+	margin-left: 120px;
+	margin-right: 120px;
+}
+
+#declipping-a{
+	margin-top: 50px;
+	margin-bottom: 100px;
+}
+
+#declipping-b{
+  margin-bottom: 5px;
+}
+</style>
+</head>
+
+<body data-spy = "scroll" data-target = ".navbar-collapse" data-offset = "50">
+
+<div class="preloader">
+     <div class="spinner">
+          <span class="spinner-rotate"></span>
+     </div>
+</div>
+
+
+<section id = "home">
+	<div class = "container">
+		<div class = "row">
+		   <div class = "col-md-offset-2 col-md-10 col-sm-12">
+				<div class = "home-wrapper">
+					<!-- <h3 class = "wow fadeInUp" data-wow-delay = "0.4s">Being an artist</h3> -->
+					 <!--<h1 class = "wow fadeInUp" data-wow-delay = "0.2s">Audio Declipping</h1>-->
+					 <!--<h3 class = "wow fadeInUp" data-wow-delay = "0.2s">A accompanying website for journal articles:</h3>-->
+					 <h4 class = "wow fadeInUp" data-wow-delay = "0.1s"> ‎‎‎‏‏‎ ‎</h4>
+					 <h1 class = "wow fadeInUp main-title" data-wow-delay = "0.1s">Chapter 6: Audio declipping with conditionally Gaussian time-frequency models</h1>
+					 <!-- <h1 class = "wow fadeInUp article-titles" data-wow-delay = "0.5s">A Survey and an Extensive Evaluation of Popular Audio Declipping Methods</h1> -->
+					 <h2 class = "wow fadeInUp" data-wow-delay = "0.5s">
+						<!-- <a href = "https://rclaveria.github.io">Rubén M. Clavería-Vega</a> -->
+						Rubén M. Clavería-Vega
+					</h2>
+					<h3 class = "wow fadeInUp article-titles" data-wow-delay = "0.5s">
+						Signal Processing and Communications Laboratory
+					</h3>
+					<h3 class = "wow fadeInUp article-titles" data-wow-delay = "0.5s">
+						University of Cambridge
+					</h3>						 
+					<div class = "buttons">
+						<a href = "#content" class = "wow fadeInUp arrow-btn" ><i class = "fa fa-angle-double-down"></i></a>
+					</div>
+				</div>
+		   </div>
+		</div>
+	</div>
+</section>
+
+<div id="content">
+
+<section id="declipping-index" class="parallax-section">
+<div class="wow fadeInUp section-title" data-wow-delay="0.2s">
+<center>
+<h2>Chapter 6: Table of contents</h2>
+</center>
+</div>
+<div class="wow fadeIn" data-wow-delay="0.4s">
+<p><a href="#declipping-a">Experiment 1: Audio declipping with alternate minimisation and conditionally Gaussian time-frequency models.</a></p>
+<p><a href="#declipping-b">Experiment 2: Restoration of a clipped long piano excerpt.</a></p>
+<p><a href="index.html">Return to main page.</a></p>
+</div>
+</section>
+
+<section id="declipping-a" class="parallax-section">
+<div class="wow fadeInUp section-title" data-wow-delay="0.2s">
+<center>
+<h2>Restoration of a collection of clipped audio signals</h2>
+</center>
+</div>
+<div class="wow fadeIn" data-wow-delay="0.4s">
+<table style = "width:80%; font-size:90%;" align = "center">
+	  <caption>
+	  <center>
+		This table provides an audible version of the signal reconstructions obtained in the declipping experiment.
+	  </center>
+	  </caption>
+    <tr>
+		<th align="center">Original source</th>
+        <th align="center">Clipped source</th>
+		<th align="center">Declipped signal (PEW)</th>
+		<th align="center">Declipped signal (AM-SBL)</th>
+		<th align="center">Declipped signal (AM-LRTFS)</th>
+        <th align="center">Declipped signal (Oracle)</th>
+    </tr>
+	<tr>
+	<td align="center" rowspan="3">
+		<div class="top"> Accordion </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A1_accordion_clean.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 1 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A1_accordion_clipped_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 10.17 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A1_accordion_PEW_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 9.67 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A1_accordion_SBL_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 10.41 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A1_accordion_LRTFS_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 13.60 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A1_accordion_oracle_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 5 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A1_accordion_clipped_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 18.42 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A1_accordion_PEW_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 19.87 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A1_accordion_SBL_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 21.05 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A1_accordion_LRTFS_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 25.19 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A1_accordion_oracle_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 10 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A1_accordion_clipped_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 25.90 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A1_accordion_PEW_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 28.19 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A1_accordion_SBL_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 29.03 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A1_accordion_LRTFS_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 33.84 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A1_accordion_oracle_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="3">
+		<div class="top"> Celesta </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A2_celesta_clean.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 1 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A2_celesta_clipped_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 21.59 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A2_celesta_PEW_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 24.53 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A2_celesta_SBL_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 25.63 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A2_celesta_LRTFS_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 31.94 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A2_celesta_oracle_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 5 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A2_celesta_clipped_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 32.82 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A2_celesta_PEW_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 34.00 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A2_celesta_SBL_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 36.49 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A2_celesta_LRTFS_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 41.43 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A2_celesta_oracle_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 10 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A2_celesta_clipped_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 39.73 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A2_celesta_PEW_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 40.79 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A2_celesta_SBL_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 43.98 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A2_celesta_LRTFS_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 48.51 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A2_celesta_oracle_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="3">
+		<div class="top"> Strings </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A3_strings_clean.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 1 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A3_strings_clipped_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 9.22 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A3_strings_PEW_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 11.37 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A3_strings_SBL_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 11.26 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A3_strings_LRTFS_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 14.88 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A3_strings_oracle_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 5 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A3_strings_clipped_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 17.55 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A3_strings_PEW_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 19.95 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A3_strings_SBL_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 20.03 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A3_strings_LRTFS_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 25.13 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A3_strings_oracle_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 10 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A3_strings_clipped_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 26.43 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A3_strings_PEW_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 27.37 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A3_strings_SBL_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 27.09 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A3_strings_LRTFS_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 32.66 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A3_strings_oracle_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="3">
+		<div class="top"> Piano (short)  </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A4_piano_clean.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 1 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A4_piano_clipped_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 15.82 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A4_piano_PEW_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 17.38 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A4_piano_SBL_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 17.61 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A4_piano_LRTFS_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 21.29 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A4_piano_oracle_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 5 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A4_piano_clipped_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 29.24 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A4_piano_PEW_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 30.37 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A4_piano_SBL_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 31.69 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A4_piano_LRTFS_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 34.43 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A4_piano_oracle_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 10 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A4_piano_clipped_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 39.96 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A4_piano_PEW_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 39.97 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A4_piano_SBL_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 41.88 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A4_piano_LRTFS_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 47.68 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A4_piano_oracle_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="3">
+		<div class="top"> Glockenspiel </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A5_glockenspiel_clean.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 1 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A5_glockenspiel_clipped_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 14.12 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A5_glockenspiel_PEW_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 11.62 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A5_glockenspiel_SBL_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 13.63 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A5_glockenspiel_LRTFS_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 10.11 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A5_glockenspiel_oracle_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 5 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A5_glockenspiel_clipped_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 18.86 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A5_glockenspiel_PEW_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 17.01 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A5_glockenspiel_SBL_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 19.73 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A5_glockenspiel_LRTFS_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 20.82 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A5_glockenspiel_oracle_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 10 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A5_glockenspiel_clipped_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 22.26 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A5_glockenspiel_PEW_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 22.00 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A5_glockenspiel_SBL_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 24.29 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A5_glockenspiel_LRTFS_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 26.13 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A5_glockenspiel_oracle_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="3">
+		<div class="top"> Clarinet </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A6_clarinet_clean.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 1 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A6_clarinet_clipped_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 9.65 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A6_clarinet_PEW_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 9.56 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A6_clarinet_SBL_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 7.15 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A6_clarinet_LRTFS_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 15.99 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A6_clarinet_oracle_sdrin_1dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 5 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A6_clarinet_clipped_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 15.85 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A6_clarinet_PEW_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 17.29 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A6_clarinet_SBL_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 17.27 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A6_clarinet_LRTFS_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 20.11 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A6_clarinet_oracle_sdrin_5dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 10 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A6_clarinet_clipped_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 25.50 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A6_clarinet_PEW_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 26.06 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A6_clarinet_SBL_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 29.31 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A6_clarinet_LRTFS_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 31.69 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/A6_clarinet_oracle_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+</table>
+</div>
+</section>
+
+<hr>
+
+<section id="declipping-b" class="parallax-section">
+<div class="wow fadeInUp section-title" data-wow-delay="0.2s">
+<center>
+<h2>Restoration of a clipped long piano excerpt (15 seconds).</h2>
+</center>
+</div>
+<div class="wow fadeIn" data-wow-delay="0.4s">
+<table style = "width:80%; font-size:90%;" align = "center">
+	<caption>
+	<center>
+		This table contains the signal reconstructions obtained for the clipped long piano excerpt (15 seconds).
+	</center>
+	</caption>
+    <tr>
+		<th align="center">Original source</th>
+        <th align="center">Clipped source</th>
+		<th align="center">Declipped signal (PEW)</th>
+		<th align="center">Declipped signal (AM-SBL)</th>
+		<th align="center">Declipped signal (AM-LRTFS)</th>
+        <th align="center">Declipped signal (Oracle)</th>
+    </tr>
+	<tr>
+	<td align="center" rowspan="2">
+		<div class="top"> Piano (15 s) </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/B0_longpiano_clean.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 3 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/B0_longpiano_clipped_sdrin_3dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 18.04 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/B0_longpiano_PEW_sdrin_3dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 17.88 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/B0_longpiano_SBL_sdrin_3dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 20.48 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/B0_longpiano_LRTFS_sdrin_3dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 24.67 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/B0_longpiano_oracle_sdrin_3dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SDR = 10 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/B0_longpiano_clipped_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 26.84 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/B0_longpiano_PEW_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 28.21 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/B0_longpiano_SBL_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 29.80 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/B0_longpiano_LRTFS_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SDR = 34.47 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/B0_longpiano_oracle_sdrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+</table>
+
+<hr>
+
+<div class="container">
+<div class="row">
+<div>
+<center>
+<h3>Decomposition of the declipped long piano excerpt with input SDR = 3 dB.</h3>
+</center>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-6">
+<center>
+<figure>
+	<img src="images_ch6/A00_ch7_piano_03.png" alt="" width="85%;"/>
+</figure>
+</center>
+</div>
+<div class="col-xs-6">
+<center>
+<table>
+<table>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 1</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano3dB_s1.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 2</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano3dB_s2.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 3</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano3dB_s3.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 4</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano3dB_s4.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 5</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano3dB_s5.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 6</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano3dB_s6.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 7</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano3dB_s7.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 8</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano3dB_s8.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 9</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano3dB_s9.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 10</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano3dB_s10.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+</table>
+</center>
+</div>
+</div>
+</div>
+
+<hr>
+
+<div class="container">
+<div class="row">
+<div>
+<center>
+<h3>Decomposition of the declipped long piano excerpt with input SDR = 10 dB.</h3>
+</center>
+</div>
+</div>
+<div class="row">
+<div class="col-xs-6">
+<center>
+<figure>
+	<img src="images_ch6/A00_ch7_piano_10.png" alt="" width="85%;"/>
+</figure>
+</center>
+</div>
+<div class="col-xs-6">
+<center>
+<table>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 1</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano10dB_s1.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 2</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano10dB_s2.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 3</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano10dB_s3.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 4</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano10dB_s4.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 5</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano10dB_s5.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 6</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano10dB_s6.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 7</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano10dB_s7.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 8</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano10dB_s8.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 9</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano10dB_s9.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 10</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch6/C0_longpiano10dB_s10.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+</table>
+</center>
+</div>
+</div>
+</div>
+<!--end content of section 2-->
+</div>
+<!--end of section 2-->
+</section>
+<!--end content of webpage-->
+</div>
+
+<footer id = "footer" class = "parallax-section">
+    <div class = "container">
+        <div class = "row">
+
+               <div class = "wow fadeInUp col-md-10 col-sm-12" data-wow-delay = "0.2s">
+                    <p class = "copyright-text">University of Cambridge -  2024</p>
+               </div>
+
+          </div>
+     </div>
+</footer>
+
+<!--javascript-->
+<script src = "js/jquery.js"></script>
+<script src = "js/bootstrap.min.js"></script>
+<script src = "js/jquery.parallax.js"></script>
+<script src = "js/jquery.magnific-popup.min.js"></script>
+<script src = "js/magnific-popup-options.js"></script>
+<script src = "js/smoothscroll.js"></script>
+<script src = "js/wow.min.js"></script>
+<script src = "js/custom.js"></script>
+
+<script src = "js/ltfat.js" type = "text/javascript"></script>
+<script src = "js/ltfatnote040.js"></script>
+<script src = "js/tabledynchange.js"></script>
+<script src = "js/bardynchange.js"></script>
+<script src = "js/plotdynchange.js"></script>
+
+</body>
+</html>

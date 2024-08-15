@@ -1,0 +1,1954 @@
+<html>
+<head>
+
+<meta charset  =  "UTF-8">
+
+<title>Exploiting low-rank structures in audio signal restoration problems</title>
+
+<meta http-equiv  =  "X-UA-Compatible" content  =  "IE  =  Edge">
+
+<meta name  =  "description" content  =  "Support material of Chapter 5: Exploiting low-rank structures in audio signal restoration problems.">
+
+<meta name  =  "author" content  =  "Rubén M. Clavería-Vega">
+<meta name  =  "viewport" content  =  "width  =  device-width, initial-scale  =  1, maximum-scale  =  1">
+
+<link rel  =  "stylesheet" href  =  "css/bootstrap.min.css">
+<link rel  =  "stylesheet" href  =  "css/animate.css">
+<link rel  =  "stylesheet" href  =  "css/magnific-popup.css">
+<link rel  =  "stylesheet" href  =  "css/font-awesome.min.css">
+<link rel  =  "stylesheet" href  =  "css/tooplate-style.css">
+
+<style>
+table, th, td {
+  border: 1px solid black;
+}
+table.center {
+  margin-left: auto; 
+  margin-right: auto;
+}	
+
+
+.button {
+  font: bold 11px Arial;
+  text-decoration: none;
+  background-color: #EEEEEE;
+  color: #333333;
+  padding: 2px 6px 2px 6px;
+  border-top: 1px solid #CCCCCC;
+  border-right: 1px solid #333333;
+  border-bottom: 1px solid #333333;
+  border-left: 1px solid #CCCCCC;
+}
+
+#content{
+  width: 90%;/*change the value to suite ur need*/
+  margin:0 auto;/*this will center ur content*/
+}
+
+#lrtfs-index{
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+#lrtfs-0{
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+#lrtfs-a{
+	margin-top: 50px;
+	margin-bottom: 10px;
+}
+
+#lrtfs-b{
+	margin-top: 50px;
+	margin-bottom: 10px;
+}
+
+#lrtfs-c{
+	margin-top: 50px;
+	margin-bottom: 10px;
+}
+
+#lrtfs-refs{
+	margin-top: 50px;
+	margin-bottom: 50px;
+}
+
+</style>
+</head>
+
+<body data-spy = "scroll" data-target = ".navbar-collapse" data-offset = "50">
+
+<div class="preloader">
+     <div class="spinner">
+          <span class="spinner-rotate"></span>
+     </div>
+</div>
+
+<section id = "home">
+	<div class = "container">
+		<div class = "row">
+			<div class = "col-md-offset-2 col-md-10 col-sm-12">
+				<div class = "home-wrapper">
+					<h4 class = "wow fadeInUp" data-wow-delay = "0.1s"> ‎‎‎‏‏‎ ‎</h4>
+					<h1 class = "wow fadeInUp main-title" data-wow-delay = "0.1s">Chapter 5: Exploiting low-rank structures in audio signal restoration problems</h1>
+					<!-- <h1 class = "wow fadeInUp article-titles" data-wow-delay = "0.5s">A Survey and an Extensive Evaluation of Popular Audio Declipping Methods</h1> -->
+					<h2 class = "wow fadeInUp" data-wow-delay = "0.5s">
+						<!-- <a href = "https://rclaveria.github.io">Rubén M. Clavería-Vega</a> -->
+						Rubén M. Clavería-Vega
+					</h2>
+					<h3 class = "wow fadeInUp article-titles" data-wow-delay = "0.5s">
+						Signal Processing and Communications Laboratory
+					</h3>
+					<h3 class = "wow fadeInUp article-titles" data-wow-delay = "0.5s">
+						University of Cambridge
+					</h3>						 
+					<div class = "buttons">
+						<a href = "#content" class = "wow fadeInUp arrow-btn" ><i class = "fa fa-angle-double-down"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+
+<div id="content">
+
+
+<section id="lrtfs-index" class="parallax-section">
+<div class="wow fadeInUp section-title" data-wow-delay="0.2s">
+<center>
+<h2>Chapter 5: Table of contents</h2>
+</center>
+</div>
+<div class="wow fadeIn" data-wow-delay="0.4s" style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:20px;">
+<p><a href="#lrtfs-0">Summary of this chapter.</a></p>
+<p><a href="#lrtfs-a">Experiment 1.A: Denoising and artifact removal with the LRTFS-EM algorithm.</a></p>
+<p><a href="#lrtfs-b">Experiment 1.B: Detailed case studies of the denoising + artifact removal test.</a></p>
+<p><ul>
+  <li><a href="#lrtfs-b11">Long piano excerpt (input SNR = 10 dB): an LRTFS-EM solution.</a></li>
+  <li><a href="#lrtfs-b12">Long piano excerpt (clean signal): source separation with min-vol KL-NMF [Leplat et al. 2020].</a></li>
+  <li><a href="#lrtfs-b13">Long piano excerpt (input SNR = 20 dB): comparison with the AM method of [Fevotte and Kowalski, 2018].</a></li>
+  <li><a href="#lrtfs-b2">Glockenspiel example (input SNR = 15 dB).</a></li>
+  <li><a href="#lrtfs-b3">Early jazz recording (input SNR = 15 dB).</a></li>
+  <li><a href="#lrtfs-b4">Polyphonic world music (input SNR = 13.14 dB).</a></li>
+</ul></p>
+<p><a href="#lrtfs-c">Experiment 2: Missing data interpolation with the LRTFS-EM algorithm.</a></p>
+<p><a href="#lrtfs-refs">References.</a></p>
+<p><a href="index.html">Return to main page.</a></p>
+</div>
+</section>
+
+
+<!-- section 1 -->
+<section id="lrtfs-0" class="parallax-section">
+<div class="wow fadeInUp section-title" data-wow-delay="0.2s">
+<center>
+<h2>Exploiting low-rank structures in audio signal restoration problems</h2>
+</center>
+</div>
+<div class="wow fadeIn" data-wow-delay="0.4s" style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:20px;">
+<p>Applications of non-negative matrix factorisation (NMF) techniques in audio signal processing typically adopt an analysis approach—factorisation is performed on the squared magnitude of the analysis coefficients returned by a certain time-frequency transform. Conversely, the use of NMF techniques in synthesis}-based models, where the amplitude of a signal over time is characterised explicitly, has been somewhat limited. A synthesis approach is desirable when the data degradation mechanism operates directly in the temporal domain (e.g., quantisation, clipping, missing data), since its effects on the spectral domain might defy an easy characterisation. With the aim of exploiting low-rank structures in synthesis-based models at a feasible computational expense, this article builds upon the so-called low-rank time-frequency synthesis (LRTFS) model and proposes an efficient expectation-maximisation (EM) algorithm to estimate the latent low-rank structure of the variance of the synthesis coefficients. Marginalisation of the coefficients and nuisance parameters such as the background noise level &sigma;<sup>2</sup> is carried out numerically by means of a lightweight MCMC sampler, thus circumventing the need of prohibitive matrix inversion operations. The proposed MCMC sampler exploits the structure of the chosen dictionary—the complex modified discrete cosine transform (CMDCT)—to perform efficient joint draws. Moreover, the non-negative factorisation sub-problem is supplemented with domain-specific regularisation schemes aimed at fostering high-quality audio reconstructions. The proposed strategy is tested on a battery of denoising tasks and its potential for signal decomposition is explored in a series of case studies. </p>
+</div>
+</section>
+<hr>
+<!-- section 2 -->
+<section id="lrtfs-a" class="parallax-section">
+<div class="wow fadeInUp section-title" data-wow-delay="0.2s">
+<center>
+<h2>Summary of the denoising + artifact removal experiment</h2>
+</center>
+</div>
+<div class="wow fadeIn" data-wow-delay="0.4s">
+<table style="width:90%; font-size:90%;" align="center">
+	  <caption><center>
+		This table provides an audible version of the signal reconstructions obtained in the denoising example.
+	  </center></caption>
+    <tr>
+		<th align="center">Clean signal</th>
+        <th align="center">Noisy input</th>
+		<th align="center">Denoised signal (EMVS)</th>
+        <th align="center">Denoised signal (LRTFS-EM)</th>
+    </tr>
+	<tr>
+	<td align="center" rowspan="3">
+		<div class="top"> Short piano </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/clean_shortpiano.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 10 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_shortpiano_snrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 21.06 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_shortpiano_snrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 21.77 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_shortpiano_snrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 15 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_shortpiano_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 25.13 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_shortpiano_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 25.86 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_shortpiano_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 20 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_shortpiano_snrin_20dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 29.31 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_shortpiano_snrin_20dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 29.81 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_shortpiano_snrin_20dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="3">
+		<div class="top"> Wind ensemble </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/clean_stravinsky.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 10 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_stravinsky_snrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 14.65 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_stravinsky_snrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 15.65 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_stravinsky_snrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 15 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_stravinsky_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 17.99 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_stravinsky_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 19.23 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_stravinsky_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 20 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_stravinsky_snrin_20dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 21.30 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_stravinsky_snrin_20dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 22.97 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_stravinsky_snrin_20dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="3">
+		<div class="top"> Accordion </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/clean_accordion.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 10 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_accordion_snrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 20.65 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_accordion_snrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 21.44 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_accordion_snrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 15 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_accordion_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 23.97 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_accordion_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 24.98 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_accordion_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 20 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_accordion_snrin_20dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 27.27 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_accordion_snrin_20dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 28.01 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_accordion_snrin_20dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="3">
+		<div class="top"> Oratorio </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/clean_oratorio.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 10 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_oratorio_snrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 18.61 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_oratorio_snrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 19.44 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_oratorio_snrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 15 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_oratorio_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 22.41 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_oratorio_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 23.63 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_oratorio_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 20 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_oratorio_snrin_20dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 26.26 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_oratorio_snrin_20dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 27.51 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_oratorio_snrin_20dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="3">
+		<div class="top"> Long piano </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/clean_longpiano.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 10 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_longpiano_snrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 24.56 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_longpiano_snrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 25.24 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_longpiano_snrin_10dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 15 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_longpiano_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 28.45 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_longpiano_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 29.01 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_longpiano_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 20 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_longpiano_snrin_20dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 32.40 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_longpiano_snrin_20dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 33.24 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_longpiano_snrin_20dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="1">
+		<div class="top"> Glockenspiel </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/clean_glock.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 15.00 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_glock_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 21.86 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_glock_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 22.65 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_glock_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="1">
+		<div class="top"> World music </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/clean_worldmusic.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 13.14 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_worldmusic_snrin_13dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 19.84 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_worldmusic_snrin_13dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 20.05 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_worldmusic_snrin_13dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="1">
+		<div class="top"> Early jazz </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/clean_earlyjazz.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 15.00 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/source_earlyjazz_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 24.58 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/emvs_solution_earlyjazz_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 25.07 dB</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5/lrtfs_solution_earlyjazz_snrin_15dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+</table>
+</div>
+</section>
+
+<hr>
+
+<section id="lrtfs-b" class="parallax-section">
+
+<div class="wow fadeInUp section-title" data-wow-delay="0.2s">
+<center>
+<h2>Some case studies for the denoising + artifact removal experiment</h2>
+</center>
+</div>
+
+<div class="wow fadeIn" data-wow-delay="0.4s">
+
+<!-- case study 1: piano -->
+<section id="lrtfs-b11" class="parallax-section">
+<div class="container">
+<div class="row">
+<div>
+<center>
+<h3>Case study 1: Long piano excerpt with additive Gaussian white noise (input SNR = 10 dB)</h3>
+</center>
+</div>
+
+<div style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:20px;"><p>
+Even with an input SNR of 10 dB, the proposed LRTFS-EM algorithm manages to both reduce the background noise and the decompose the underlying signal into meaningful components, with clear-cut separation between the 4 four notes and the percusive elements (key and pedal hits).
+</p></div>
+
+</div>
+
+<div class="row">
+<div style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:20px;">
+<center><p>
+Long piano excerpt: summary of results (LRTFS-EM)
+</p></center>
+<table style="width:95%" align="center">
+    <tr>
+		<th align="center">Clean signal</th>
+        <th align="center">Noisy input (input SNR = 10 dB)</th>
+        <th align="center">Denoised signal (LRTFS-EM)</th>
+		<th align="center">Sustained piano notes (black)</th>
+		<th align="center">Percussive hits (red)</th>
+    </tr>
+    <tr>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="piano/A0_piano_clean.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="piano/A0_piano_input.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="piano/A0_piano_denoised.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="piano/A0_piano_notes.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="piano/A0_piano_hit_and_pedal.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+    </tr>	
+</table>
+</div>
+</div>
+
+<div class="row">
+<div style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:60px;">
+<div class="col-xs-6">
+<center>
+<p>Waveform visualisation</p>
+<figure>
+	<img src="figs/A0_piano.png" alt="" width="100%;"/>
+</figure>
+</center>
+</div>
+<div class="col-xs-6">
+<center>
+<p>Audible components</p>
+<table style="width:75%; font-size:94%;">
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 1</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/A0_piano_s1.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 2</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/A0_piano_s2.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 3</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/A0_piano_s3.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 4</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/A0_piano_s4.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 5</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/A0_piano_s5.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 6</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/A0_piano_s6.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 7</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/A0_piano_s7.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 8</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/A0_piano_s8.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 9</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/A0_piano_s9.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 10</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/A0_piano_s10.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+</table>
+</center>
+</div>
+</div>
+</div>
+</div>
+</section>
+<hr>
+
+<!-- case study 1b: piano KL decomposition -->
+<section id="lrtfs-b12" class="parallax-section">
+<div class="container">
+<div class="row">
+<div>
+<center>
+<h3>Case study 1: comparison with min-vol KL-NMF</h3>
+</center>
+</div>
+<div style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:20px;"><p>
+For comparison purposes, the KL-NMF method with minimum volume pensalisation [Leplat et al., 2020], [Leplat et al., 2021] is run on the clean signal. The extracted components are arranged such that they match as closely as possible the sources identified with the proposed LRTFS-EM method.
+</p>
+<p>Although KL-NMF with minimum volume pensalisation manages to decompose the signal in meaningful components, the distinction between sources is not as sharp as that obtained with the proposed strategy. While the first component (KL-NMF with min-vol) is virtually identical to that of LRTFS-EM (except for continuity/smoothness issues), the second component (KL-NMF with min-vol) merges two different notes in one source. These notes correspond to sources 2 and 3 of the LRTFS-EM decomposition.</p>
+</div>
+</div>
+
+<div class="row">
+<div style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:60px;">
+<div class="col-xs-6">
+<center>
+<p>Waveform visualisation (KL-NMF + min-vol)</p>
+<figure>
+	<img src="figs/B0_piano.png" alt="" width="100%;"/>
+</figure>
+</center>
+</div>
+<div class="col-xs-6">
+<center>
+<p>Audible components (KL-NMF + min-vol)</p>
+<table style="width:75%; font-size:94%;">
+	<tr>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 1</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/B0_piano_s1.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 2</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/B0_piano_s2.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 3</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/B0_piano_s3.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 4</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/B0_piano_s4.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 5</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/B0_piano_s5.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 6</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/B0_piano_s6.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 7</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/B0_piano_s7.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 8</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/B0_piano_s8.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 9</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/B0_piano_s9.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 10</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="piano_components/B0_piano_s10.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>	
+</table>
+</center>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- case study 1c: AM Fevotte -->
+<section id="lrtfs-b13" class="parallax-section">
+<div class="container">
+<div class="row">
+<div>
+<center>
+<h3>Case study 1: comparison with alternate minimisation LRTFS (piano excerpt with input SNR = 10 dB)</h3>
+</center>
+</div>
+
+<div style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:20px;"><p>
+The optimisation strategy proposed in [Fevotte and Kowalski, 2018] addresses a model similar to that adopted in this work, but relies on an alternate minimisation strategy between the low-rank matrices (W, H) and the synthesis coefficients and an annealing scheme (i.e., controlled gradual decrease) of the unknown background noise level &sigma;<sup>2</sup>. Conversely, LRTFS-EM targets (W, H) directly by marginalising both the synthesis coefficients and the noise level &sigma;<sup>2</sup>—hence the solution is less sensitive to initial estimation of these parameters. Moreover, the temporal smoothness penalisation on activation coefficients H seems to improve the continuity of the identified sources and the overall solution. In the table below, the result reported in [Fevotte and Kowalski, 2018], where their alternate-minimisation scheme is applied to the same piano excerpt but with background noise set at SNR = 20 dB, is compared with the LRTFS-EM solution for the same input.
+</p></div>
+</div>
+
+<div class="row">
+<div style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:80px;">
+<center><p>
+Comparison between LRTFS-EM and alternate minimisation
+</p></center>
+<center>
+<table style="width:90%">
+    <tr>
+		<th align="center">Noisy input (SNR = 20 dB)</th>
+		<th align="center"> AM-LRTFS solution [Fevotte and Kowalski, 2018]</th>
+        <th align="center"> Proposed solution (LRTFS-EM with CMDCT dictionary representation)</th>
+    </tr>
+    <tr>
+		<td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="piano/A0_piano_input_snr20dB.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="piano/A0_piano_LRTFS2018.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="piano/A0_LRTFS_EM.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+    </tr>	
+</table>
+</center>
+</div>
+</div>
+</div>
+</section>
+<!-- end section 1c-->
+<hr>
+
+<!-- case study 2: glockenspiel -->
+<section id="lrtfs-b2" class="parallax-section">
+<div class="container">
+<div class="row">
+<div>
+<center>
+<h3>Case study 2: glockenspiel excerpt with background noise (input SNR = 15 dB)</h3>
+</center>
+</div>
+
+<div style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:20px;"><p>
+The LRTFS-EM method is applied to a 6 second long glockenspiel recording contaminated with background noise. The low-rank components can be loosely separated between tonal, sustained notes (black) and percussive hits (red).
+</p></div>
+
+</div>
+
+<div class="row">
+<div style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:20px;">
+<center><p>
+Glockenspiel excerpt: summary of results (LRTFS-EM)
+</p></center>
+<table style="width:95%" align="center">
+	<tr>
+		<th align="center">Clean signal</th>
+        <th align="center">Noisy input (input SNR = 15 dB)</th>
+        <th align="center">Denoised signal (LRTFS-EM)</th>
+		<th align="center">Tonal components (black)</th>
+		<th align="center">Percussive elements (red)</th>
+    </tr>
+    <tr>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="glockenspiel/A0_glock_clean.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="glockenspiel/A0_glock_input.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="glockenspiel/A0_glock_denoised.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="glockenspiel/A0_glock_tonal.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="glockenspiel/A0_glock_transients.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+    </tr>	
+</table>
+</div>
+</div>
+
+<div class="row">
+<div style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:60px;">
+<div class="col-xs-6">
+<center>
+<p>Waveform visualisation</p>
+<figure>
+	<img src="figs/A0_glockenspiel.png" alt="" width="100%;"/>
+</figure>
+</center>
+</div>
+<div class="col-xs-6">
+<center>
+<p>Audible components</p>
+<table style="width:75%; font-size:94%;">
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 1</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_glock_s1.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 2</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_glock_s2.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 3</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_glock_s3.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 4</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_glock_s4.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 5</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_glock_s5.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 6</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_glock_s6.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 7</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_glock_s7.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 8</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_glock_s8.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 9</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_glock_s9.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 10</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_glock_s10.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+</table>
+</center>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- case study 3: jazz -->
+<!-- case study 3: jazz -->
+<section id="lrtfs-b3" class="parallax-section">
+<div class="container">
+<div class="row">
+<div>
+<center>
+<h3>Case study 3: Early jazz recording with piano and trumpet (input SNR = 15 dB)</h3>
+</center>
+</div>
+
+<div style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:20px;"><p>
+The LRTFS-EM method is applied to a 25 second long early jazz recording contaminated with additive white Gaussian background noise. The low-rank components can be loosely separated between the piano parts (black) and the trumpet melody (red). Although the decomposition is not perfect—the components identified as piano parts still retain a small contribution of the trumpet melody at the beginning and the end of the signal—, the trumpet components stay mostly silent during the piano solo in the middle. Moreover, the denoised signal (LRTFS-EM solution) exhibits high perceptual quality and contains limited presence of artifacts.
+</p></div>
+
+</div>
+
+<div class="row">
+<div style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:20px;">
+<center><p>
+Early jazz excerpt: summary of results (LRTFS-EM)
+</p></center>
+<table style="width:95%" align="center">
+	<tr>
+		<th align="center">Clean signal</th>
+        <th align="center">Noisy input (input SNR = 15 dB)</th>
+        <th align="center">Denoised signal (LRTFS-EM)</th>
+		<th align="center">Piano (black)</th>
+		<th align="center">Trumpet + Clarinet (red)</th>
+    </tr>
+    <tr>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="jazz/A0_jazz_clean.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="jazz/A0_jazz_input.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="jazz/A0_jazz_denoised.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="jazz/A0_jazz_piano.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="jazz/A0_jazz_trumpet.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+    </tr>
+</table>
+</div>
+</div>
+
+<div class="row">
+<div style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:60px;">
+<div class="col-xs-6">
+<center>
+<p>Waveform visualisation</p>
+<figure>
+	<img src="figs/A0_jazztrumpet.png" alt="" width="100%;"/>
+</figure>
+</center>
+</div>
+<div class="col-xs-6">
+<center>
+<p>Audible components</p>
+<table style="width:75%; font-size:94%;">
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 1</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_jazz_s1.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 2</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_jazz_s2.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 3</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_jazz_s3.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 4</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_jazz_s4.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 5</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_jazz_s5.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 6</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_jazz_s6.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 7</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_jazz_s7.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 8</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_jazz_s8.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 9</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_jazz_s9.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 10</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_jazz_s10.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+</table>
+</center>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+
+<hr>
+
+<!-- case study 4: jazz -->
+<section id="lrtfs-b4" class="parallax-section">
+<div class="container">
+<div class="row">
+<div>
+<center>
+<h3>Case study 4: World music excerpt with guitar, voice and percussion (input SNR = 13.14 dB)</h3>
+</center>
+</div>
+
+<div style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:20px;"><p>
+The LRTFS-EM method is applied to a 24 second long polyphonic music excerpt. The components identified by the LRTFS-EM decomposition can be loosely separated between melodic elements (guitar and voice) and the percussive instruments (red), although there is a certain degree of overlap between sources (e.g., voice and plucked guitar strings might be noticeable in the red components). 
+</p></div>
+
+</div>
+
+<div class="row">
+<div style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:20px;">
+<center><p>
+Polyphonic world music excerpt: summary of results (LRTFS-EM)
+</p></center>
+<table style="width:95%" align="center">
+	<tr>
+		<th align="center">Clean signal</th>
+        <th align="center">Noisy input (input SNR = 13.14 dB)</th>
+        <th align="center">Denoised signal (LRTFS-EM)</th>
+		<th align="center">Voice and melodic instruments (black)</th>
+		<th align="center">Percussion (red)</th>
+    </tr>
+    <tr>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="world/A0_world_clean.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="world/A0_world_input.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="world/A0_world_denoised.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="world/A0_world_melodic.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="world/A0_world_percussion.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+    </tr>
+</table>
+</div>
+</div>
+
+<div class="row">
+<div style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:60px;">
+<div class="col-xs-6">
+<center>
+<p>Waveform visualisation</p>
+<figure>
+	<img src="figs/A0_worldmusic.png" alt="" width="100%;"/>
+</figure>
+</center>
+</div>
+<div class="col-xs-6">
+<center>
+<p>Audible components</p>
+<table style="width:75%; font-size:94%;">
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 1</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_world_s1.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 2</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_world_s2.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 3</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_world_s3.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 4</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_world_s4.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 5</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_world_s5.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 6</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_world_s6.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 7</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_world_s7.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 8</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_world_s8.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+	<tr>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 9</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_world_s9.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+		</td>
+        <td align="center" rowspan="1">
+		<div class="top"> Component 10</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="A00_components/C0_world_s10.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		</td>
+    </tr>
+</table>
+</center>
+</div>
+</div>
+</div>
+
+
+<div class="row"><div style="margin-right:100px; margin-left:100px; margin-top:20px; margin-bottom:20px;"><p>
+The LRTFS-EM solution is compared with denoising methods based on strucutred sparsity. In particular, the reconstruction obtained with the two-layer representation proposed in [Fevotte et al., 2007] for tonal and transient separation is included alongside our own sparse solution (we adopted the two-layer representation of [Fevotte et al., 2007] but used the Complex Modified Discrete Cosine Transform rather than the MDCT dictionary suggested in that work. Coefficients are computed using an MCMC simulation similar to that [Wolfe et al., 2004]. Although the LRTFS-EM solution contains less artifacts than the MCMC reconstructions and performs similarly in terms of output SNR, it fails to recover the "brightness" of the clean signal. The vocal parts, in particular, might sound somewhat opaque and muffled. We conjecture that the use of NMF-based decomposition in speech and singing voice analysis might require a larger number of low-rank components (e.g., [Bilen et al., 2015] reports K = 10 for music and K = 28 for human voice) and the incorporation of alternative modelling assumptions—the temporal smoothness assumptions adopted in [Wolfe et al., 2004], [Fevotte et at., 2007] and this work might be incomplete or inaccurate in certain settings.
+</p></div></div>
+
+<div class="row">
+<center>
+<p>Polyphonic world music excerpt: comparison of MCMC and EMVS reconstructions </p>
+<table style="width:80%">
+    <tr>
+		<th align="center">MDCT two-layer representation with structured sparsity [Fevotte et al., 2007]</th>
+        <th align="center">CMDCT two-layer representation with structured sparsity (EMVS)</th>
+    </tr>
+    <tr>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="world/fevotte_2007_mcmc_mdct_two_layer_solution.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+        <td align="center" rowspan="1">
+		<audio controls style="width: 100%;">
+		<source src="world/A0_world_mcmc_solution.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio>
+		</td>
+    </tr>	
+</table>
+</center>
+</div>
+</div>
+</section>
+
+<hr>
+
+<!-- MDI section---> <!-- section c -->
+<section id="lrtfs-c" class="parallax-section">
+
+<div class="wow fadeInUp section-title" data-wow-delay="0.2s">
+<center>
+<h2>Summary of the missing data interpolation experiment with LRTFS-EM</h2>
+</center>
+</div>
+
+<div class="wow fadeIn" data-wow-delay="0.4s">
+<table style="width:90%; font-size:90%;" align="center">
+	  <caption><center>
+		This table provides an audible version of the signal reconstructions obtained in the missing data interpolation experiment.
+	  </center></caption>
+    <tr>
+		<th align="center">Clean signal</th>
+        <th align="center">Corrupted input</th>
+		<th align="center">Reconstructed signal (EMVS)</th>
+        <th align="center">Reconstructed signal (LRTFS-EM)</th>
+    </tr>
+	<tr>
+	<tr>
+	<td align="center" rowspan="1">
+		<div class="top"> Celesta </div>
+		<div class="top"> (Bernoulli{3/4}) </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/clean_1.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 1.25 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/corrupted_source_1.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 25.88 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/emvs_solution_1.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 31.13 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/lrtfs_solution_1.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="1">
+		<div class="top"> Oratorio </div>
+		<div class="top"> (Bernoulli{3/4}) </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/clean_2.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 1.25 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/corrupted_source_2.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 15.16 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/emvs_solution_2.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 22.81 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/lrtfs_solution_2.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="1">
+		<div class="top"> Piano </div>
+		<div class="top"> (Bernoulli{3/4}) </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/clean_3.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 1.25 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/corrupted_source_3.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 29.60 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/emvs_solution_3.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 32.13 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/lrtfs_solution_3.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="1">
+		<div class="top"> Piano </div>
+		<div class="top"> (Bernoulli{9/10}) </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/clean_4.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 0.45 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/corrupted_source_4.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 18.23 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/emvs_solution_4.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 19.72 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/lrtfs_solution_4.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="1">
+		<div class="top"> Clarinet </div>
+		<div class="top"> (Average gap = 6 ms) </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/clean_5.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 4.25 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/corrupted_source_5.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 25.86 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/emvs_solution_5.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 28.92 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/lrtfs_solution_5.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="1">
+		<div class="top"> Celesta </div>
+		<div class="top"> (Average gap = 6 ms) </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/clean_6.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 4.13 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/corrupted_source_6.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 22.07 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/emvs_solution_6.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 22.09 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/lrtfs_solution_6.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="1">
+		<div class="top"> Accordion </div>
+		<div class="top"> (Average gap = 6 ms) </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/clean_7.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 4.46 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/corrupted_source_7.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 23.06 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/emvs_solution_7.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 24.24 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/lrtfs_solution_7.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="1">
+		<div class="top"> Vibraphone </div>
+		<div class="top"> (Average gap = 0.6 ms) </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/clean_8.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 4.43 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/corrupted_source_8.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 26.68 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/emvs_solution_8.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 26.46 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/lrtfs_solution_8.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="1">
+		<div class="top"> Piano </div>
+		<div class="top"> (Average gap = 0.6 ms) </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/clean_9.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 4.43 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/corrupted_source_9.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 24.45 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/emvs_solution_9.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 28.49 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/lrtfs_solution_9.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align="center" rowspan="1">
+		<div class="top"> Piano </div>
+		<div class="top"> (Average gap = 6 ms) </div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/clean_10.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top">Input SNR = 4.20 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/corrupted_source_10.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 14.74 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/emvs_solution_10.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align="center" rowspan="1">
+		<div class="top"> Output SNR = 18.48 dB</div><div>&nbsp</div>
+		<div class="bottom"><audio controls style="width: 100%;">
+		<source src="audibles_ch5_mdi/lrtfs_solution_10.wav" type="audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+</table>
+</div>
+</section>
+
+<!-- Refs -->
+<section id="lrtfs-refs" class="parallax-section">
+
+<div class="wow fadeInUp section-title" data-wow-delay="0.2s">
+<center>
+<h2>References</h2>
+</center>
+</div>
+
+<div class="wow fadeIn" data-wow-delay="0.4s">
+<ul>
+<li>[Wolfe et al., 2004] Wolfe, P. J., Godsill, S. J., and Ng, W.-J. (2004). Bayesian variable selection and regularization for time–frequency surface estimation. Journal of the Royal Statistical Society: Series B (Statistical
+Methodology), 66(3):575–589</li>
+<li>[Fevotte et al., 2007] Fevotte, C., Torresani, B., Daudet, L., and Godsill, S. J. (2007). Sparse linear regression
+with structured priors and application to denoising of musical audio. IEEE Transactions on Audio, Speech,
+and Language Processing, 16(1):174–185.</li>
+<li>[Bilen et al., 2015] Bilen, C., Ozerov, A., and Perez, P. (2015). Audio declipping via nonnegative matrix factorization. In 2015 IEEE Workshop on Applications of Signal Processing to Audio and Acoustics (WASPAA), pages 1–5. IEEE.</li>
+<li>[Fevotte and Kowalski, 2018] Fevotte, C. and Kowalski, M. (2018). Estimation with low-rank time–frequency
+synthesis models. IEEE Transactions on Signal Processing, 66(15):4121–4132.</li>
+<li>[Leplat et al., 2020] Leplat, V., Gillis, N., and Ang, A. M. (2020). Blind audio source separation with minimum-
+volume beta-divergence NMF. IEEE Transactions on Signal Processing, 68:3400–3410.</li>
+<li>[Leplat et al., 2021] Leplat, V., Gillis, N., and Idier, J. (2021). Multiplicative updates for NMF with beta-divergences
+under disjoint equality constraints. SIAM Journal on Matrix Analysis and Applications, 42(2):730–752.</li>
+</ul> 
+</div>
+</section>	
+
+</div>
+
+<footer id = "footer" class = "parallax-section">
+    <div class = "container">
+        <div class = "row">
+               <div class = "wow fadeInUp col-md-10 col-sm-12" data-wow-delay = "0.2s">
+                    <p class = "copyright-text">University of Cambridge -  2024</p>
+               </div>
+
+          </div>
+     </div>
+</footer>
+
+<!--javascript-->
+<script src = "js/jquery.js"></script>
+<script src = "js/bootstrap.min.js"></script>
+<script src = "js/jquery.parallax.js"></script>
+<script src = "js/jquery.magnific-popup.min.js"></script>
+<script src = "js/magnific-popup-options.js"></script>
+<script src = "js/smoothscroll.js"></script>
+<script src = "js/wow.min.js"></script>
+<script src = "js/custom.js"></script>
+
+<script src = "js/ltfat.js" type = "text/javascript"></script>
+<script src = "js/ltfatnote040.js"></script>
+<script src = "js/tabledynchange.js"></script>
+<script src = "js/bardynchange.js"></script>
+<script src = "js/plotdynchange.js"></script>
+
+
+</body></html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<title>Bayesian approaches to time-frequency inverse problems</title>
+
+<!--
+
+Template 2100 Artist
+
+http://www.tooplate.com/view/2100-artist
+
+-->
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="description" content="Web page accompanying the thesis: Bayesian approaches to time-frequency inverse problems.">
+<meta name="keywords" content="signal reconstruction, Bayesian variable selection, sparsity, audio signal restoration, denoising, declipping, missing data interpolation, low-rank regularisation, non-negative matrix factorisation, source separation, generative models for audio.">
+<meta name="author" content="Rubén M. Clavería-Vega">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/animate.css">
+<link rel="stylesheet" href="css/magnific-popup.css">
+<link rel="stylesheet" href="css/font-awesome.min.css">
+
+<!-- Main css -->
+<link rel="stylesheet" href="css/tooplate-style.css">
+
+</head>
+<body data-spy="scroll" data-target=".navbar-collapse" data-offset="50" onload="Table_values_init(), Change_sorting_bar_graphs('Algorithm-sorted'), Change_plot_init()">
+
+<!-- PRE LOADER -->
+<div class="preloader">
+     <div class="spinner">
+          <span class="spinner-rotate"></span>
+     </div>
+</div>
+
+
+<!-- HOME SECTION -->
+<section id="home">
+	<div class="container">
+		<div class="row">
+		   <div class="col-md-offset-2 col-md-10 col-sm-12">
+				<div class="home-wrapper">
+					<!-- <h3 class="wow fadeInUp" data-wow-delay="0.4s">Being an artist</h3> -->
+					 <!--<h1 class="wow fadeInUp" data-wow-delay="0.2s">Audio Declipping</h1>-->
+					 <!--<h3 class="wow fadeInUp" data-wow-delay="0.2s">A accompanying website for journal articles:</h3>-->
+					 <h1 class="wow fadeInUp" data-wow-delay="0.1s"> ‎‎‎‏‏‎ ‎</h1>
+					 <h1 class="wow fadeInUp main-title" data-wow-delay="0.1s">Bayesian approaches to time-frequency inverse problems</h1>
+					 <!-- <h1 class="wow fadeInUp article-titles" data-wow-delay="0.5s">A Survey and an Extensive Evaluation of Popular Audio Declipping Methods</h1> -->
+					 <h2 class="wow fadeInUp" data-wow-delay="0.5s">
+						<!-- <a href="https://rclaveria.github.io">Rubén M. Clavería-Vega</a> -->
+						Rubén M. Clavería-Vega
+					</h2>
+					 <h3 class="wow fadeInUp article-titles" data-wow-delay="0.5s">
+						Signal Processing and Communications Laboratory
+					</h3>
+					 <h3 class="wow fadeInUp article-titles" data-wow-delay="0.5s">
+						University of Cambridge
+					</h3>						 
+					<div class="buttons">
+						<!--
+						<a href="https://github.com/rclaveria/bayesian_TF_inference" class="wow fadeInUp link-btn" data-wow-delay="0.6s">Code&nbsp;repository</a>
+						<a href="https://github.com/rclaveria/bayesian_TF_inference.pdf" class="wow fadeInUp link-btn" style="padding:10px 27.77px" data-wow-delay="0.6s">Thesis&nbsp;draft</a>
+						<a href="#abstract" class="wow fadeInUp link-btn" ><i class="fa fa-angle-double-down"></i> About</a>
+						<a href="#research" class="wow fadeInUp link-btn"><i class="fa fa-angle-double-down"></i> Research chapters</a>
+						-->
+						<h4 class="wow fadeInUp" data-wow-delay="0.1s"> ‎‎‎‏‏‎ ‎</h4>
+						<a href="#abstract" class="wow fadeInUp arrow-btn" ><i class="fa fa-angle-double-down"></i></a>
+						
+					 </div>
+				</div>
+		   </div>
+		</div>
+	</div>
+</section>
+
+<!-- ABSTRACT SECTION -->
+<section id="abstract" class="parallax-section">
+     <div class="container" style="width:70%">
+          <div class="row">
+               <div class="col-md-12 col-sm-12">
+                    <div class="abstract-thumb">
+                         <div class="wow fadeInUp section-title" data-wow-delay="0.2s">
+						    <center>
+                            <h2>About</h2>
+							</center>
+                         </div>
+						 <div class="wow fadeIn" data-wow-delay="0.4s">
+							<p>
+							  This is a website accompanying the thesis entitled <b>Bayesian approaches to time-frequency inverse problems</b>. Since this work is concerned with the restoration and analysis of degraded audio signals, many of the results presented in the dissertation are best appreciated through direct auditory assessment. For this reason, this website presents an audible version of the reconstructions obtained with the techniques proposed in this thesis. Supplementary material for chapters 3 to 6 is provided in <a href="#research">Supplementary material</a>.
+							</p>
+						  </div>
+                         <div class="wow fadeInUp section-title" data-wow-delay="0.2s">
+						 <center>
+                            <h3>Abstract</h3>
+						 </center>
+                         </div>
+						  <div class="wow fadeIn" data-wow-delay="0.4s">
+							<p>Although the phenomenon of sound is intrinsically linked to the propagation of acoustic waves through physical
+							media such as gas, liquid or solid, audio signals are better defined and understood by the way their spectral
+							composition evolves over time. Characterising the dynamics of these hidden spectral components—rather
+							than their raw waveform—is crucial for a wide range of practical applications involving sound. However, the
+							mathematical description of auditory phenomena possesses a high degree of ambiguity due to the countless
+							ways a signal can be broken down. Thus, employing prior knowledge and a probabilistic modelling approach
+							that can account for uncertainty becomes essential.</p>
+							<p>This dissertation studies the characterisation of audio signals as time-frequency dictionary representations
+							and their application to audio reconstruction problems. To address the inherent ambiguity of overcomplete
+							dictionaries, the assumed generative mechanism of the audio waveform is enriched with prior structures that
+							not only serve as a regularisation device but also reflect domain-specific modelling assumptions based on the
+							empirical observation of audio spectra. The resulting models are thus addressed through the well-established
+							apparatus of Bayesian computation, which can be tailored to the specific problems investigated in this
+							dissertation and leveraged in the formulation of efficient and high-quality audio signal restoration techniques.</p>
+							
+							<p>A synthesis-based approach is favoured throughout this dissertation. This means that, although some prior
+							assumptions stem from the characterisation of spectral components, regularisation schemes are imposed on the
+							regression coefficients of the dictionary representation (termed synthesis coefficients in the context of audio
+							signal processing) instead of the short-time Fourier transform of a corrupted input signal (analysis coefficients).
+							Hence the restoration techniques presented in this thesis are underpinned by generative models of the raw
+							audio waveform itself rather than its spectrogram. This approach allows for great modelling flexibility and
+							can organically handle data corruption mechanisms occurring in the waveform domain such as missing data
+							entries, clipping or quantisation of the amplitude values, and stationary and non-stationary observation noise.</p>
+							
+							<p>The modelling assumptions adopted throughout this dissertation are varied. Chapters 2 to 4 explore a
+							structured sparsity approach based on a hierarchical Bayesian variable selection scheme. This is accomplished
+							through a spike-and-slab prior on the synthesis coefficients, which explicitly models the activation or exclusion
+							of the basis functions of the time-frequency dictionary. Chapter 2 introduces a time-frequency dictionary based
+							on the complex modified discrete cosine transform (CMDCT ) and derives a series of efficient Markov chain
+							Monte Carlo algorithms to estimate the synthesis coefficients. Building upon the dictionary and sampling
+							techniques introduced in Chapter 2, Chapter 3 recasts time-frequency dictionary representations as state-space
+							models and formulates a sequential Markov chain Monte Carlo strategy to carry out real-time audio signal
+							restoration. Exploiting a Gaussian mixture spike-and-slab prior, Chapter 4 develops a high-performance
+							expectation–maximisation algorithm for sparse reconstruction of corrupted audio signals.</p>
+							
+							<p>Chapters 5 and 6 mark a departure from the sparse approximation paradigm, investigating instead the
+							potential of low-rank latent structures in time-frequency inverse problems. Following a synthesis-oriented
+							approach, the waveform production mechanism adopted in chapters 5 and 6 still relies on the expansion of
+							a time-frequency dictionary, but regression coefficients are instead governed by a latent low-rank variance
+							structure. The resulting mechanism is termed low-rank time-frequency synthesis (LRTFS) model and is tested
+							on a series of audio reconstruction problems. Chapter 5 proposes a computationally feasible expectation–
+							maximisation scheme to compute the latent parameters of the LRTFS model and examines its application
+							in denoising, artifact removal and missing data interpolation tasks. In turn, Chapter 6 focuses on the
+							reconstruction of clipped audio signals, for which an alternate minimisation strategy is presented.</p>
+							</div>
+					</div>
+               </div>
+          </div>
+     </div>
+</section>
+
+<!-- RESEARCH CHAPTERS -->
+<section id="research" class="parallax-section">
+     <div class="container" style="width:70%">
+          <div class="row">
+               <div class="col-md-12 col-sm-12">
+                    <div class="abstract-thumb">
+						<div class="wow fadeInUp section-title" data-wow-delay="0.2s">
+						<center>
+							<h2>Supplementary material</h2>
+						</center>
+						</div>
+						<div class="wow fadeIn" data-wow-delay="0.4s">
+							<p>
+							   Chapters 2 to 6 contain the novel contribution of this thesis. Since Chapter 2 is primarily methodological, the preparation of supplementary material is limited to chapters 3 to 6.
+							</p>
+						</div>
+						<div class="wow fadeIn" data-wow-delay="0.4s">
+						<ul>
+							<li><a href="index_b.html">Supplementary material for <b>Chapter 3: Time-frequency dictionary representations as state-space models.</b></a></li>
+							<li><a href="index_c.html">Supplementary material for <b>Chapter 4: An expectation-maximisation algorithm for time-frequency inverse problems with variable selection</b></a></li>
+							<li><a href="index_d.html">Supplementary material for <b>Chapter 5: Exploiting low-rank structures in audio signal restoration problems.</b></a></li>
+							<li><a href="index_e.html">Supplementary material for <b>Chapter 6: Audio declipping with conditionally Gaussian time-frequency models.</b></a></li>
+						</ul> 
+						</div>
+                    </div>
+               </div>
+          </div>
+     </div>
+</section>
+
+<!-- FOOTER SECTION -->
+<footer id="footer" class="parallax-section">
+    <div class="container">
+        <div class="row">
+
+               <div class="wow fadeInUp col-md-10 col-sm-12" data-wow-delay="0.2s">
+                    <p class="copyright-text">University of Cambridge -  2024</p>
+               </div>
+
+          </div>
+     </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="js/jquery.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.parallax.js"></script>
+<script src="js/jquery.magnific-popup.min.js"></script>
+<script src="js/magnific-popup-options.js"></script>
+<script src="js/smoothscroll.js"></script>
+<script src="js/wow.min.js"></script>
+<script src="js/custom.js"></script>
+
+<script src="js/ltfat.js" type="text/javascript"></script>
+<script src="js/ltfatnote040.js"></script>
+<script src="js/tabledynchange.js"></script>
+<script src="js/bardynchange.js"></script>
+<script src="js/plotdynchange.js"></script>
+
+</body>
+</html>
