@@ -24,7 +24,7 @@ html, body {
 
 
 /*---------------------------------------
-  Typorgraphy              
+  Typorgraphy
 -----------------------------------------*/
 
 h1,h2,h3,h4,h5,h6 {
@@ -36,12 +36,12 @@ h1,h2,h3,h4,h5,h6 {
 h1 {
   color: #3d3d3f;
   font-family: 'Playfair Display', serif;
-  font-size: 20px; /*40px*/
+  font-size: 1.25rem;
   line-height: normal;
 }
 
 h1.main-title {
-  font-size: 50px;
+  font-size: 3.125rem; /* 50px */
 }
 
 h1.article-titles{
@@ -50,8 +50,28 @@ h1.article-titles{
 
 h2 {
   color: #575757;
-  font-size: 35px;
+  font-size: 2.188rem; /* 35px */
   line-height: normal;
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.25rem;
+  }
+
+  h2 {
+    font-size: 1.563rem; /* 25px */
+  }
+}
+
+@media (max-width: 580px) {
+  h1.main-title {
+    font-size: 2.188rem; /* 35px */
+  }
+
+  h1.article-titles {
+    font-size: 0.938rem; /* 15px */
+  }
 }
 
 /* h3 {
@@ -65,32 +85,43 @@ h2 {
 
 h3 {
   color: #03AFF4;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: bold;
   line-height: normal;
-  letter-spacing: 1px;
+  letter-spacing: 0.063rem; /* 1px */
   text-transform: uppercase;
 }
 
 h4 {
   color: #03AFF4;
-  font-size: 18px;
+  font-size: 1.125rem; /* 18px */
   font-weight: 400;
 }
 
 h5 {
   color: #575757;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 400;
   text-align: center;
 }
 
 p {
   color: #878787;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 300;
-  line-height: 25px;
-  letter-spacing: 0.2px;
+  line-height: 1.563rem; /* 25px */
+  letter-spacing: 0.0125rem; /* 0.2px */
+}
+
+@media (max-width: 580px) {
+  h3 {
+    font-size: 0.875rem; /* 14px */
+    letter-spacing: 0.063rem;
+  }
+
+  h4 {
+    font-size: 0.875rem; /* 14px */
+  }
 }
 
 strong, span {
@@ -130,6 +161,15 @@ strong, span {
 
 html{
   -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+/* Improve text rendering */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 a {
@@ -172,11 +212,25 @@ a:hover, a:active, a:focus {
   background-size: cover !important;
 }
 
-#abstract, #work, #abstract-light, #research
+/* Disable parallax on mobile for better performance */
+@media (max-width: 768px) {
+  .parallax-section {
+    background-attachment: scroll !important;
+  }
+}
+
+#abstract, #work, #abstract-light, #research,
 #contact, footer {
   position: relative;
-  padding-top: 25px;
-  padding-bottom: 40px;
+  padding-top: clamp(1.5rem, 4vw, 3rem);
+  padding-bottom: clamp(2rem, 5vw, 4rem);
+}
+
+#abstract .container, #research .container {
+  max-width: 1100px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 3vw, 2rem);
 }
 
 .section {
@@ -239,11 +293,6 @@ a:hover, a:active, a:focus {
 -----------------------------------------*/
 
 #home {
-  background-image: url('../images/home_signals.png');
-  background-position: center;
-  background-size: contain;
-  background-repeat: no-repeat;
-  border-radius: 5px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -252,20 +301,39 @@ a:hover, a:active, a:focus {
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
-  height: 75vh;
   text-align: center;
   position: relative;
   margin: 82px 12px 20px 12px;
-  padding-bottom: 100px;
+  padding: 0;
 }
 
 .home-wrapper {
-  background: rgba(250,250,250,0.95);
-  padding: 32px 12px; /*32px 12px;*/
+  background-image: url('../images/home_signals.png');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-color: rgba(250,250,250,0.95);
+  background-blend-mode: lighten;
+  padding: 32px 12px;
+  border-radius: 5px;
+  width: 100%;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .home-wrapper {
+    padding: 24px 12px;
+  }
+}
+
+@media (max-width: 580px) {
+  .home-wrapper {
+    padding: 22px 12px;
+  }
 }
 
 .buttons {
-  margin-top: 10px; /*40px*/
+  margin-top: clamp(1rem, 2vw, 2rem);
 }
 
 .link-btn {
@@ -274,18 +342,24 @@ a:hover, a:active, a:focus {
   border-radius: 40px;
   color: #ffffff;
   font-weight: bold;
-  padding: 10px 15px 10px 15px;
-  margin: 0 7px 0 7px;
+  padding: clamp(0.6rem, 1.5vw, 0.8rem) clamp(1rem, 2vw, 1.5rem);
+  margin: 0.5rem;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  display: inline-block;
+  transition: all 0.3s ease;
 }
 
 .link-btn:hover {
   background: #03AFF4;
   color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(3, 175, 244, 0.3);
 }
 
 .link-btn:focus {
   background: #03AFF4;
   color: #ffffff;
+  outline: none;
 }
 
 
@@ -312,73 +386,114 @@ a:hover, a:active, a:focus {
 }
 
 /*---------------------------------------
-  InputSDR and values chooser           
+  InputSDR and values chooser
 -----------------------------------------*/
 .chooser {
-	text-align: center;
-	padding: 0 0 0 0px;
+  text-align: center;
+  padding: 1rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-
 .chooser a {
-	margin-left: 6px;
-	margin-right: 6px;
+  margin: 0.3rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
 }
 
 .chooser a:hover{
-	color: black;
+  color: black;
+  background-color: rgba(0,0,0,0.05);
 }
 
 .chooser a.clicked{
-	color: #03AFF4; /*#0373f4;*/
-	font-weight: bold;
+  color: #03AFF4;
+  font-weight: bold;
+  background-color: rgba(3, 175, 244, 0.1);
 }
 
 .chooser a.clicked:hover{
-	color: black;
-	font-weight: bold;
+  color: black;
+  font-weight: bold;
+}
+
+/* Mobile optimization for chooser */
+@media (max-width: 580px) {
+  .chooser {
+    gap: 0.3rem;
+  }
+
+  .chooser a {
+    margin: 0.2rem;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
 }
 
 
 
 /*---------------------------------------
- TABLE 
+ TABLE
  -----------------------------------------*/
 
- 
 td.clickable:hover {
-background-color: #9adffa;
-cursor: default;
+  background-color: #9adffa;
+  cursor: pointer;
 }
 
 .comptable {
-	margin-top: 10px;
-    border-collapse: collapse;
+  margin-top: 1rem;
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  display: block;
 }
 
 .comptable tr td, .comptable tr th  {
-    border: 1px solid black;
+  border: 1px solid #333;
+  padding: clamp(0.4rem, 1vw, 0.8rem);
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
 }
 
 .stickycont, table {
-margin: auto;
+  margin: auto;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .is_stuck {
-background-color: rgb(100,100,100);
-border-radius: 5px;
+  background-color: rgb(100,100,100);
+  border-radius: 5px;
 }
 
 .errtable tr:nth-child(even) {
-    background-color: rgb(220,220,220)
+  background-color: rgb(220,220,220)
 }
 
 td.clickable {
-/* background-color: gray; */
+  /* background-color: gray; */
 }
 
 td.clickable_right{
-	text-align:center;
+  text-align:center;
+}
+
+/* Make tables responsive on mobile */
+@media (max-width: 768px) {
+  .comptable {
+    font-size: 0.8rem;
+  }
+
+  .comptable tr td, .comptable tr th {
+    padding: 0.4rem;
+    font-size: 0.75rem;
+  }
 }
 	
 .carousel-indicators li {
@@ -424,17 +539,19 @@ td.clickable_right{
 
 .work-thumb img {
   border-radius: 5px;
-  cursor: crosshair;
+  cursor: pointer;
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .work-caption {
-	margin-bottom: 40px;
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
 }
-
 
 .research-thumb {
   border-radius: 5px;
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
   padding: 0;
   overflow: hidden;
   position: relative;
@@ -451,24 +568,60 @@ td.clickable_right{
 
 .research-thumb img {
   border-radius: 5px;
-  cursor: crosshair;
+  cursor: pointer;
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .research-caption {
-	margin-bottom: 40px;
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/* Ensure images are always responsive */
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 /*---------------------------------------
-  Footer section              
+  Footer section
 -----------------------------------------*/
 
 footer {
-  padding: 20px;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
   background: #000000;
 }
 
 footer h4 {
   color: #f9f9f9;
+}
+
+footer .copyright-text {
+  color: #f9f9f9;
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  margin: 0;
+}
+
+/* Make audio players responsive */
+audio {
+  max-width: 100%;
+  width: 100%;
+}
+
+/* Ensure iframe and video elements are responsive */
+iframe, video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Better list styling in content */
+ul, ol {
+  line-height: 1.8;
+}
+
+li {
+  margin-bottom: 0.5rem;
 }
 
 
@@ -513,38 +666,35 @@ footer h4 {
 }
 
 /*---------------------------------------
-  Mobile Responsive styles              
+  Mobile Responsive styles
 -----------------------------------------*/
 
-@media (max-width: 980px) {
-
- h1 {font-size: 20px;}
-
- #abstract .abstract-thumb {
-  padding-left: 0px;
- }
-
- #work .work-thumb {
-  margin-top: 5px;
- }
-
- #research .research-thumb {
-  margin-top: 5px;
- }
+/* Large tablets and small desktops */
+@media (max-width: 1200px) {
+  #abstract .container, #research .container {
+    width: 85%;
+  }
 }
 
-
-
-@media (max-width: 768px) {
-
-  h1 {
-    font-size: 20px;
+/* Tablets */
+@media (max-width: 980px) {
+  #abstract .abstract-thumb {
+    padding-left: 0px;
   }
 
-  h2 {font-size: 25px;}
+  #work .work-thumb {
+    margin-top: 0.313rem; /* 5px */
+  }
 
+  #research .research-thumb {
+    margin-top: 0.313rem; /* 5px */
+  }
+}
+
+/* Small tablets and large phones */
+@media (max-width: 768px) {
   footer .col-md-4 {
-    margin-bottom: 35px;
+    margin-bottom: 2.188rem; /* 35px */
   }
 
   footer .col-md-6 {
@@ -552,40 +702,21 @@ footer h4 {
   }
 
   footer .copyright-text {
-    padding-bottom: 25px;
+    padding-bottom: 1.563rem; /* 25px */
   }
-
 }
 
+/* Mobile phones */
 @media (max-width: 580px) {
-
-  h1.main-title {
-    font-size: 35px;
-  }
-
-  h1.article-titles {
-    font-size: 15px;
-  }
-
-  h3 {
-    font-size: 14px;
-    letter-spacing: 1px;
-  }
-
-  h4 {
-    font-size: 14px;
-  }
-
   #about .abstract-thumb {
-    padding: 22px 12px;
+    padding: 1.375rem 0.75rem; /* 22px 12px */
     margin-top: 0px;
   }
-
 }
 
+/* Small mobile phones */
 @media (max-width: 360px) {
   #home {
-    height: 85vh;
-  } 
-
+    height: auto;
+  }
 }
