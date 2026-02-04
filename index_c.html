@@ -1,0 +1,2039 @@
+<!DOCTYPE html>
+<html lang  =  "en">
+<head>
+
+<meta charset  =  "UTF-8">
+
+<title>An expectatation-maximisation algorithm for coefficient estimation in time-frequency inverse problems with variable selection</title>
+
+<meta http-equiv  =  "X-UA-Compatible" content  =  "IE  =  Edge">
+<meta name  =  "description" content  =  "Support material of Chapter 4: An expectatation-maximisation algorithm for coefficient estimation in time-frequency inverse problems with variable selection.">
+<meta name  =  "author" content  =  "Rubén M. Clavería-Vega">
+<meta name  =  "viewport" content  =  "width  =  device-width, initial-scale  =  1, maximum-scale  =  1">
+
+<link rel  =  "stylesheet" href  =  "css/bootstrap.min.css">
+<link rel  =  "stylesheet" href  =  "css/animate.css">
+<link rel  =  "stylesheet" href  =  "css/magnific-popup.css">
+<link rel  =  "stylesheet" href  =  "css/font-awesome.min.css">
+
+<!-- Main css -->
+<link rel  =  "stylesheet" href  =  "css/tooplate-style.css">
+<style>
+table, th, td {
+  border: 1px solid black;
+}
+table.center {
+  margin-left: auto; 
+  margin-right: auto;
+}
+
+#content{
+  width: 80%;/*change the value to suite ur need*/
+  margin:0 auto;/*this will center ur content*/
+  margin-bottom: 100px;
+  margin-top: 100px;
+}
+
+#emvs-denoising{
+  margin-bottom: 50px;
+}
+
+#emvs-transient{
+  margin-bottom: 50px;
+}
+
+#emvs-mdi{
+  margin-bottom: 10px;
+}
+
+#emvs-index{
+  margin-top: 100px;
+}
+
+audio {
+    height: 25px;
+	width: 100%;
+}
+</style>
+</head>
+<body data-spy  =  "scroll" data-target  =  ".navbar-collapse" data-offset  =  "50">
+
+<!-- PRE LOADER -->
+<div class="preloader">
+     <div class="spinner">
+          <span class="spinner-rotate"></span>
+     </div>
+</div>
+
+<!-- Title -->
+<section id = "home">
+	<div class = "container">
+		<div class = "row">
+
+               <div class = "col-md-offset-2 col-md-10 col-sm-12">
+                    <div class = "home-wrapper">
+                        <!-- <h3 class = "wow fadeInUp" data-wow-delay = "0.4s">Being an artist</h3> -->
+                         <!--<h1 class = "wow fadeInUp" data-wow-delay = "0.2s">Audio Declipping</h1>-->
+						 <!--<h3 class = "wow fadeInUp" data-wow-delay = "0.2s">A accompanying website for journal articles:</h3>-->
+						 <h4 class = "wow fadeInUp" data-wow-delay = "0.1s"> ‎‎‎‏‏‎ ‎</h4>
+						 <h1 class = "wow fadeInUp main-title" data-wow-delay = "0.1s">Chapter 4: An expectatation-maximisation algorithm for coefficient estimation in time-frequency inverse problems with variable selection</h1>
+						 
+
+                         <!-- <h1 class = "wow fadeInUp article-titles" data-wow-delay = "0.5s">A Survey and an Extensive Evaluation of Popular Audio Declipping Methods</h1> -->
+                         <h2 class = "wow fadeInUp" data-wow-delay = "0.5s">
+							<!-- <a href = "https://rclaveria.github.io">Rubén M. Clavería-Vega</a> -->
+							Rubén M. Clavería-Vega
+						</h2>
+                         <h3 class = "wow fadeInUp article-titles" data-wow-delay = "0.5s">
+							Signal Processing and Communications Laboratory
+						</h3>
+                         <h3 class = "wow fadeInUp article-titles" data-wow-delay = "0.5s">
+							University of Cambridge
+						</h3>						 
+						<div class = "buttons">
+							<a href = "#content" class = "wow fadeInUp arrow-btn" ><i class = "fa fa-angle-double-down"></i></a>
+						</div>
+                    </div>
+               </div>
+
+          
+		</div>
+	</div>
+</section>
+
+<div id = "content">
+
+<section id="emvs-index" class="parallax-section">
+<div class="wow fadeInUp section-title" data-wow-delay="0.2s">
+<center>
+<h2>Chapter 4: Table of contents</h2>
+</center>
+</div>
+<div class="wow fadeIn" data-wow-delay="0.4s">
+<p><a href="#emvs-denoising">Experiment 1: Denoising with EMVS.</a></p>
+<p><a href="#emvs-transient">Experiment 2: Denoising + transient characterisation via EMVS with multiresolution dictionary.</a></p>
+<p><a href="#emvs-mdi">Experiment 3: Simultaneous denoising + gap interpolation with EMVS.</a></p>
+<p><a href="index.html">Return to main page.</a></p>
+</div>
+</section>
+
+<section id="emvs-denoising" class="parallax-section">
+<div>
+<div>
+<div>
+<div>
+<div class="wow fadeInUp section-title" data-wow-delay="0.2s">
+<h2> Chapter 4 (EMVS): Audible files for the denoising test suite</h2>
+</div>
+<div class="wow fadeIn" data-wow-delay="0.4s">
+<table style = "width:80%; font-size: 100%;" align = "center">
+	<caption>
+		This table compares the results obtained with EMVS and Markov chain Monte Carlo
+	</caption>
+    <tr>
+		<th align = "center">Clean signal</th>
+        <th align = "center">Noisy input</th>
+		<th align = "center">EMVS</th>
+		<th align = "center">Batch MCMC (1000 iterations)</th>
+    </tr>
+	<tr>
+	<td align = "center" rowspan = "5">
+		<div class = "top"> Piano </div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_clean.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 0 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_0.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 14.97 dB</div><div>Runtime = 0.12 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_0_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 14.38 dB</div><div>Runtime = 11.36 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_0_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 5 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_5.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 17.71 dB</div><div>Runtime = 0.12 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_5_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 16.90 dB</div><div>Runtime = 12.24 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_5_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 10 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_10.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 21.14 dB</div><div>Runtime = 0.12 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_10_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 20.14 dB</div><div>Runtime = 11.89 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_10_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 15 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_15.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 25.19 dB</div><div>Runtime = 0.13 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_15_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 23.62 dB</div><div>Runtime = 12.65 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_15_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 20 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_20.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 29.70 dB</div><div>Runtime = 0.12 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_20_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 27.99 dB</div><div>Runtime = 12.69 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_20_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align = "center" rowspan = "5">
+		<div class = "top"> Glockenspiel </div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_clean.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 0 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_0.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 16.41 dB</div><div>Runtime = 0.29 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_0_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 16.25 dB</div><div>Runtime = 23.71 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_0_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 5 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_5.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 18.97 dB</div><div>Runtime = 0.31 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_5_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 18.77 dB</div><div>Runtime = 23.65 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_5_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 10 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_10.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 21.06 dB</div><div>Runtime = 0.31 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_10_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 20.82 dB</div><div>Runtime = 23.73 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_10_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 15 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_15.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 23.65 dB</div><div>Runtime = 0.30 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_15_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 23.36 dB</div><div>Runtime = 23.82 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_15_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 20 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_20.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 26.87 dB</div><div>Runtime = 0.27 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_20_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 25.99 dB</div><div>Runtime = 23.94 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_20_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align = "center" rowspan = "5">
+		<div class = "top"> Celesta </div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_20_clean.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 0 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_20_snrin_0.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 18.45 dB</div><div>Runtime = 0.67 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_20_snrin_0_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 18.39 dB</div><div>Runtime = 65.05 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_20_snrin_0_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 5 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_20_snrin_5.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 21.40 dB</div><div>Runtime = 0.66 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_20_snrin_5_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 21.76 dB</div><div>Runtime = 65.27 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_20_snrin_5_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 10 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_20_snrin_10.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 25.21 dB</div><div>Runtime = 0.64 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_20_snrin_10_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 25.01 dB</div><div>Runtime = 65.39 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_20_snrin_10_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 15 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_20_snrin_15.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 28.74 dB</div><div>Runtime = 0.66 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_20_snrin_15_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 28.56 dB</div><div>Runtime = 66.29 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_20_snrin_15_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 20 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_20_snrin_20.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 32.70 dB</div><div>Runtime = 0.65 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_20_snrin_20_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 32.21 dB</div><div>Runtime = 66.87 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_20_snrin_20_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align = "center" rowspan = "5">
+		<div class = "top"> Accordion </div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_17_clean.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 0 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_17_snrin_0.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 14.38 dB</div><div>Runtime = 0.75 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_17_snrin_0_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 14.51 dB</div><div>Runtime = 72.94 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_17_snrin_0_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 5 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_17_snrin_5.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 17.41 dB</div><div>Runtime = 0.73 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_17_snrin_5_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 17.43 dB</div><div>Runtime = 73.07 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_17_snrin_5_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 10 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_17_snrin_10.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 20.80 dB</div><div>Runtime = 0.73 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_17_snrin_10_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 20.26 dB</div><div>Runtime = 73.12 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_17_snrin_10_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 15 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_17_snrin_15.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 23.93 dB</div><div>Runtime = 0.75 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_17_snrin_15_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 23.11 dB</div><div>Runtime = 73.24 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_17_snrin_15_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 20 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_17_snrin_20.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 27.30 dB</div><div>Runtime = 0.76 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_17_snrin_20_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 26.04 dB</div><div>Runtime = 73.73 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_17_snrin_20_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align = "center" rowspan = "5">
+		<div class = "top"> Vibraphone </div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_3_clean.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 0 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_3_snrin_0.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 15.12 dB</div><div>Runtime = 0.82 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_3_snrin_0_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 15.91 dB</div><div>Runtime = 80.35 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_3_snrin_0_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 5 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_3_snrin_5.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 18.82 dB</div><div>Runtime = 0.83 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_3_snrin_5_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 19.36 dB</div><div>Runtime = 83.18 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_3_snrin_5_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 10 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_3_snrin_10.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 22.53 dB</div><div>Runtime = 0.80 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_3_snrin_10_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 22.59 dB</div><div>Runtime = 80.11 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_3_snrin_10_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 15 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_3_snrin_15.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 26.12 dB</div><div>Runtime = 0.81 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_3_snrin_15_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 25.93 dB</div><div>Runtime = 80.36 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_3_snrin_15_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 20 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_3_snrin_20.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 30.13 dB</div><div>Runtime = 0.82 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_3_snrin_20_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 29.57 dB</div><div>Runtime = 80.90 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_3_snrin_20_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align = "center" rowspan = "5">
+		<div class = "top"> Oratorio </div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_9_clean.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 0 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_9_snrin_0.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 11.25 dB</div><div>Runtime = 0.94 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_9_snrin_0_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 12.03 dB</div><div>Runtime = 88.72 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_9_snrin_0_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 5 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_9_snrin_5.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 14.78 dB</div><div>Runtime = 0.92 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_9_snrin_5_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 15.18 dB</div><div>Runtime = 89.21 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_9_snrin_5_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 10 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_9_snrin_10.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 18.51 dB</div><div>Runtime = 0.96 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_9_snrin_10_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 18.55 dB</div><div>Runtime = 89.65 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_9_snrin_10_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 15 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_9_snrin_15.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 22.44 dB</div><div>Runtime = 0.92 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_9_snrin_15_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 22.07 dB</div><div>Runtime = 89.90 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_9_snrin_15_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 20 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_9_snrin_20.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 26.28 dB</div><div>Runtime = 0.93 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_9_snrin_20_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 25.65 dB</div><div>Runtime = 89.79 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_9_snrin_20_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align = "center" rowspan = "5">
+		<div class = "top"> Country vocals </div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_11_clean.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 0 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_11_snrin_0.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 11.45 dB</div><div>Runtime = 2.11 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_11_snrin_0_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 11.27 dB</div><div>Runtime = 200.61 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_11_snrin_0_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 5 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_11_snrin_5.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 14.18 dB</div><div>Runtime = 2.08 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_11_snrin_5_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 13.93 dB</div><div>Runtime = 203.88 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_11_snrin_5_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 10 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_11_snrin_10.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 17.17 dB</div><div>Runtime = 2.11 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_11_snrin_10_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 16.64 dB</div><div>Runtime = 200.51 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_11_snrin_10_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 15 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_11_snrin_15.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 20.27 dB</div><div>Runtime = 2.11 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_11_snrin_15_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 19.43 dB</div><div>Runtime = 201.07 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_11_snrin_15_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 20 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_11_snrin_20.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 23.52 dB</div><div>Runtime = 2.15 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_11_snrin_20_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 22.23 dB</div><div>Runtime = 203.49 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_11_snrin_20_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align = "center" rowspan = "5">
+		<div class = "top"> Jazz trumpet </div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_6_clean.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 0 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_6_snrin_0.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 13.96 dB</div><div>Runtime = 2.67 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_6_snrin_0_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 14.17 dB</div><div>Runtime = 250.37 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_6_snrin_0_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 5 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_6_snrin_5.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 17.40 dB</div><div>Runtime = 2.67 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_6_snrin_5_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 17.31 dB</div><div>Runtime = 252.57 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_6_snrin_5_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 10 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_6_snrin_10.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 21.01 dB</div><div>Runtime = 2.65 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_6_snrin_10_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 20.61 dB</div><div>Runtime = 251.26 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_6_snrin_10_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 15 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_6_snrin_15.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 24.58 dB</div><div>Runtime = 2.67 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_6_snrin_15_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 24.01 dB</div><div>Runtime = 252.20 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_6_snrin_15_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 20 dB</div><div>&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_6_snrin_20.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 27.88 dB</div><div>Runtime = 2.67 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_6_snrin_20_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 27.15 dB</div><div>Runtime = 251.16 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_6_snrin_20_c.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+
+<hr>
+<section id="emvs-transient" class="parallax-section">
+<div>
+<div>
+<div>
+<div>
+<div class="wow fadeInUp section-title" data-wow-delay="0.2s">
+<h2> Chapter 4 (EMVS): Audible files for the tonal-transient separation experiment</h2>
+</div>
+<div class="wow fadeIn" data-wow-delay="0.4s">
+<table style = "width:80%; fontsize:100%;" align = "center">
+	<caption>
+		This table compares the results obtained with EMVS (1 layer) and EMVS (2 layers)
+	</caption>
+    <tr>
+		<th align = "center">Clean signal</th>
+        <th align = "center">Noisy input</th>
+		<th align = "center">EMVS 1 layer</th>
+		<th align = "center">EMVS 2 layers</th>
+		<th align = "center">Tonal-transient separation</th>
+    </tr>
+	<tr>
+	<td align = "center" rowspan = "5">
+		<div class = "top"> Piano </div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_clean.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 0 dB</div>
+		<div class = "top">&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_0.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 14.97 dB</div><div>Runtime = 0.12 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_0_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 14.94 dB</div><div>Runtime = 0.51 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_0_b_TT.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div style = "border:1px solid black;"><div>Tonal</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_0_b_T.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+		<div style = "border:1px solid black;"><div>Transient</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_0_b_tran.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 5 dB</div>
+		<div class = "top">&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_5.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 17.71 dB</div><div>Runtime = 0.12 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_5_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 17.82 dB</div><div>Runtime = 0.48 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_5_b_TT.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div style = "border:1px solid black;"><div>Tonal</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_5_b_T.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+		<div style = "border:1px solid black;"><div>Transient</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_5_b_tran.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 10 dB</div>
+		<div class = "top">&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_10.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 21.14 dB</div><div>Runtime = 0.12 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_10_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 21.47 dB</div><div>Runtime = 0.52 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_10_b_TT.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div style = "border:1px solid black;"><div>Tonal</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_10_b_T.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+		<div style = "border:1px solid black;"><div>Transient</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_10_b_tran.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 15 dB</div>
+		<div class = "top">&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_15.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 25.19 dB</div><div>Runtime = 0.13 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_15_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 25.64 dB</div><div>Runtime = 0.49 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_15_b_TT.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div style = "border:1px solid black;"><div>Tonal</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_15_b_T.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+		<div style = "border:1px solid black;"><div>Transient</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_15_b_tran.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 20 dB</div>
+		<div class = "top">&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_20.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 29.70 dB</div><div>Runtime = 0.12 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_20_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 29.51 dB</div><div>Runtime = 0.49 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_20_b_TT.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div style = "border:1px solid black;"><div>Tonal</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_20_b_T.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+		<div style = "border:1px solid black;"><div>Transient</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_21_snrin_20_b_tran.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+	</td>
+	</tr>
+	<tr>
+	<td align = "center" rowspan = "5">
+		<div class = "top"> Glockenspiel (A) </div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_clean.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 0 dB</div>
+		<div class = "top">&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_0.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 16.41 dB</div><div>Runtime = 0.29 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_0_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 17.16 dB</div><div>Runtime = 1.15 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_0_b_TT.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div style = "border:1px solid black;"><div>Tonal</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_0_b_T.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+		<div style = "border:1px solid black;"><div>Transient</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_0_b_tran.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 5 dB</div>
+		<div class = "top">&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_5.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 18.97 dB</div><div>Runtime = 0.31 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_5_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 20.63 dB</div><div>Runtime = 1.15 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_5_b_TT.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div style = "border:1px solid black;"><div>Tonal</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_5_b_T.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+		<div style = "border:1px solid black;"><div>Transient</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_5_b_tran.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 10 dB</div>
+		<div class = "top">&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_10.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 21.06 dB</div><div>Runtime = 0.31 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_10_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 23.96 dB</div><div>Runtime = 1.16 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_10_b_TT.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div style = "border:1px solid black;"><div>Tonal</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_10_b_T.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+		<div style = "border:1px solid black;"><div>Transient</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_10_b_tran.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 15 dB</div>
+		<div class = "top">&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_15.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 23.65 dB</div><div>Runtime = 0.30 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_15_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 27.25 dB</div><div>Runtime = 1.15 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_15_b_TT.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div style = "border:1px solid black;"><div>Tonal</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_15_b_T.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+		<div style = "border:1px solid black;"><div>Transient</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_15_b_tran.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 20 dB</div>
+		<div class = "top">&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_20.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 26.87 dB</div><div>Runtime = 0.27 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_20_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 30.31 dB</div><div>Runtime = 1.14 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_20_b_TT.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div style = "border:1px solid black;"><div>Tonal</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_20_b_T.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+		<div style = "border:1px solid black;"><div>Transient</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_2_snrin_20_b_tran.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+	</td>
+	</tr>
+	<tr>
+	<td align = "center" rowspan = "5">
+		<div class = "top"> Glockenspiel (B) </div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_8_clean.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 0 dB</div>
+		<div class = "top">&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_0.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 15.04 dB</div><div>Runtime = 0.60 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_0_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 16.98 dB</div><div>Runtime = 2.33 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_0_b_TT.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div style = "border:1px solid black;"><div>Tonal</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_0_b_T.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+		<div style = "border:1px solid black;"><div>Transient</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_0_b_tran.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 5 dB</div>
+		<div class = "top">&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_5.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 16.61 dB</div><div>Runtime = 0.57 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_5_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 20.54 dB</div><div>Runtime = 2.34 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_5_b_TT.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div style = "border:1px solid black;"><div>Tonal</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_5_b_T.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+		<div style = "border:1px solid black;"><div>Transient</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_5_b_tran.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 10 dB</div>
+		<div class = "top">&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_10.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 18.44 dB</div><div>Runtime = 0.59 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_10_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 23.80 dB</div><div>Runtime = 2.34 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_10_b_TT.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div style = "border:1px solid black;"><div>Tonal</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_10_b_T.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+		<div style = "border:1px solid black;"><div>Transient</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_10_b_tran.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 15 dB</div>
+		<div class = "top">&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_15.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 21.86 dB</div><div>Runtime = 0.58 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_15_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 26.96 dB</div><div>Runtime = 2.37 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_15_b_TT.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div style = "border:1px solid black;"><div>Tonal</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_15_b_T.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+		<div style = "border:1px solid black;"><div>Transient</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_15_b_tran.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top">SNR_in = 20 dB</div>
+		<div class = "top">&nbsp;</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_20.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 25.78 dB</div><div>Runtime = 0.59 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_20_a.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> SNR = 30.22 dB</div><div>Runtime = 2.31 s</div>
+		<div class = "bottom"><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_20_b_TT.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+		<div class = "top">&nbsp;</div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div style = "border:1px solid black;"><div>Tonal</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_20_b_T.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+		<div style = "border:1px solid black;"><div>Transient</div>
+		<div><audio controls>
+		<source src = "audibles_EMVS/sel_8_snrin_20_b_tran.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div></div>
+	</td>
+	</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+
+<hr>
+<section id="emvs-mdi" class="parallax-section">
+<div>
+<div>
+<div>
+<div>
+<div class="wow fadeInUp section-title" data-wow-delay="0.2s">
+<h2> Chapter 4 (EMVS): Audible files for the missing data interpolation experiment</h2>
+</div>
+<div class="wow fadeIn" data-wow-delay="0.4s">
+<table style = "width:80%; fontsize:100%;" align = "center">
+	<caption>
+		This table compiles the results obtained in the missing data interpolation with background noise.
+	</caption>
+    <tr>
+		<th align = "center">Clean signal</th>
+        <th align = "center">Corrupted input</th>
+		<th align = "center">EMVS for gap interpolation</th>
+    </tr>
+	<tr>
+	<td align = "center" rowspan = "3">
+		<div class = "top"> Glockenspiel </div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/clean_sel_2.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Average gap length  =  0.6 [ms]</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/input_sel_2_pattern_1.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Reconstructed signal</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/output_sel_2_pattern_1.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Average gap length  =  6.0 [ms]</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/input_sel_2_pattern_2.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Reconstructed signal</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/output_sel_2_pattern_2.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Average gap length  =  60.0 [ms]</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/input_sel_2_pattern_3.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Reconstructed signal</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/output_sel_2_pattern_3.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align = "center" rowspan = "3">
+		<div class = "top"> Clarinet </div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/clean_sel_16.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Average gap length  =  0.6 [ms]</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/input_sel_16_pattern_1.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Reconstructed signal</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/output_sel_16_pattern_1.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Average gap length  =  6.0 [ms]</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/input_sel_16_pattern_2.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Reconstructed signal</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/output_sel_16_pattern_2.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Average gap length  =  60.0 [ms]</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/input_sel_16_pattern_3.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Reconstructed signal</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/output_sel_16_pattern_3.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align = "center" rowspan = "3">
+		<div class = "top"> Accordion </div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/clean_sel_17.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Average gap length  =  0.6 [ms]</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/input_sel_17_pattern_1.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Reconstructed signal</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/output_sel_17_pattern_1.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Average gap length  =  6.0 [ms]</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/input_sel_17_pattern_2.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Reconstructed signal</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/output_sel_17_pattern_2.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Average gap length  =  60.0 [ms]</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/input_sel_17_pattern_3.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Reconstructed signal</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/output_sel_17_pattern_3.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align = "center" rowspan = "3">
+		<div class = "top"> Celesta </div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/clean_sel_20.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Average gap length  =  0.6 [ms]</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/input_sel_20_pattern_1.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Reconstructed signal</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/output_sel_20_pattern_1.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Average gap length  =  6.0 [ms]</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/input_sel_20_pattern_2.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Reconstructed signal</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/output_sel_20_pattern_2.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Average gap length  =  60.0 [ms]</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/input_sel_20_pattern_3.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Reconstructed signal</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/output_sel_20_pattern_3.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<tr>
+	<td align = "center" rowspan = "3">
+		<div class = "top"> Jazz trumpet </div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/clean_sel_22.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Average gap length  =  0.6 [ms]</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/input_sel_22_pattern_1.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Reconstructed signal</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/output_sel_22_pattern_1.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Average gap length  =  6.0 [ms]</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/input_sel_22_pattern_2.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Reconstructed signal</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/output_sel_22_pattern_2.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Average gap length  =  60.0 [ms]</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/input_sel_22_pattern_3.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	<td align = "center" rowspan = "1">
+		<div class = "top"> Reconstructed signal</div>
+		<div class = "bottom"><audio controls>
+		<source src = "EMVS_MDI/output_sel_22_pattern_3.wav" type = "audio/wav">
+		Your browser does not support the audio element.
+		</audio></div>
+	</td>
+	</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- end of content panel-->
+</div>
+
+<footer id = "footer" class = "parallax-section">
+    <div class = "container">
+        <div class = "row">
+
+               <div class = "wow fadeInUp col-md-10 col-sm-12" data-wow-delay = "0.2s">
+                    <p class = "copyright-text">University of Cambridge -  2024</p>
+               </div>
+
+          </div>
+     </div>
+</footer>
+
+<script src = "js/jquery.js"></script>
+<script src = "js/bootstrap.min.js"></script>
+<script src = "js/jquery.parallax.js"></script>
+<script src = "js/jquery.magnific-popup.min.js"></script>
+<script src = "js/magnific-popup-options.js"></script>
+<script src = "js/smoothscroll.js"></script>
+<script src = "js/wow.min.js"></script>
+<script src = "js/custom.js"></script>
+
+<script src = "js/ltfat.js" type = "text/javascript"></script>
+<script src = "js/ltfatnote040.js"></script>
+<script src = "js/tabledynchange.js"></script>
+<script src = "js/bardynchange.js"></script>
+<script src = "js/plotdynchange.js"></script>
+	
+
+</body>
+</html>
